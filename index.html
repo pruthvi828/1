@@ -1,331 +1,443 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DSP Lab Experiments - 1-Click MATLAB Download</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #090d16;
-      --card-bg: rgba(22, 30, 49, 0.7);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --accent: #10b981;
-      --text: #f1f5f9;
-      --text-muted: #94a3b8;
-      --code-bg: #0b1120;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at 50% 0%, #172554 0%, var(--bg) 70%);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px;
-      line-height: 1.6;
-    }
-
-    .container {
-      max-width: 860px;
-      width: 100%;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 35px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(59, 130, 246, 0.15);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      color: #60a5fa;
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      margin-bottom: 18px;
-    }
-
-    h1 {
-      font-size: 2.4rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #ffffff 30%, #93c5fd 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 12px;
-    }
-
-    .subtitle {
-      color: var(--text-muted);
-      font-size: 1.05rem;
-      max-width: 580px;
-      margin: 0 auto;
-    }
-
-    .action-box {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      backdrop-filter: blur(16px);
-      border-radius: 20px;
-      padding: 32px;
-      margin-bottom: 30px;
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      text-align: center;
-    }
-
-    .btn-group {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 14px;
-      width: 100%;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 16px 28px;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 1rem;
-      text-decoration: none;
-      cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      border: none;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-      color: white;
-      box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 15px 30px -5px rgba(59, 130, 246, 0.6);
-      filter: brightness(1.1);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--text);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.12);
-      transform: translateY(-2px);
-    }
-
-    .auto-notice {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--accent);
-      font-size: 0.88rem;
-      font-weight: 500;
-    }
-
-    .experiments-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 12px;
-      margin-bottom: 30px;
-      width: 100%;
-    }
-
-    .exp-pill {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 12px;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 0.88rem;
-    }
-
-    .exp-num {
-      background: rgba(59, 130, 246, 0.2);
-      color: #93c5fd;
-      font-weight: 700;
-      font-size: 0.75rem;
-      padding: 4px 8px;
-      border-radius: 6px;
-      white-space: nowrap;
-    }
-
-    .exp-name {
-      color: #e2e8f0;
-      font-weight: 500;
-    }
-
-    .code-section {
-      background: var(--code-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      overflow: hidden;
-      width: 100%;
-    }
-
-    .code-header {
-      background: rgba(255, 255, 255, 0.03);
-      border-bottom: 1px solid var(--card-border);
-      padding: 12px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    pre {
-      font-family: 'Fira Code', monospace;
-      font-size: 0.82rem;
-      padding: 20px;
-      overflow-x: auto;
-      max-height: 380px;
-      color: #cbd5e1;
-      line-height: 1.5;
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      background: #10b981;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.3s ease;
-      pointer-events: none;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  </style>
+  <meta charset="utf-8">
+  <title>DSP MATLAB Code</title>
 </head>
-<body>
-  <div class="container">
-    <div class="header">
-      <div class="badge">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
-        All 10 DSP Lab Experiments Ready
-      </div>
-      <h1>MATLAB DSP Experiments</h1>
-      <p class="subtitle">Complete, verified code consolidated into one script. Click below to download directly to your computer.</p>
-    </div>
+<body style="background: white; color: black; margin: 15px; font-family: monospace;">
 
-    <div class="action-box">
-      <div class="btn-group">
-        <a id="downloadBtn" href="dsp.m" download="dsp.m" class="btn btn-primary">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download dsp.m (1-Click)
-        </a>
-        <button id="copyBtn" class="btn btn-secondary">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Copy Entire Code
-        </button>
-      </div>
-      <div class="auto-notice">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        Instant 1-click download directly to your Downloads folder
-      </div>
-    </div>
-
-    <div class="experiments-grid">
-      <div class="exp-pill"><span class="exp-num">EXP 1</span><span class="exp-name">Signal Generation (CT & DT)</span></div>
-      <div class="exp-pill"><span class="exp-num">EXP 2</span><span class="exp-name">Signal Operations (Shift, Scale)</span></div>
-      <div class="exp-pill"><span class="exp-num">EXP 3</span><span class="exp-name">Convolution & Cross-Correlation</span></div>
-      <div class="exp-pill"><span class="exp-num">EXP 4</span><span class="exp-name">DFT and IDFT</span></div>
-      <div class="exp-pill"><span class="exp-num">EXP 5</span><span class="exp-name">8-Point Radix-2 DIT-FFT</span></div>
-      <div class="exp-pill"><span class="exp-num">EXP 6</span><span class="exp-name">Convolution Theorem</span></div>
-      <div class="exp-pill"><span class="exp-num">EXP 7</span><span class="exp-name">FIR Low-Pass Filter (Windows)</span></div>
-      <div class="exp-pill"><span class="exp-num">EXP 8</span><span class="exp-name">IIR Butterworth Low-Pass Filter</span></div>
-      <div class="exp-pill"><span class="exp-num">EXP 9</span><span class="exp-name">ECG Signal Generation (P, QRS, T)</span></div>
-      <div class="exp-pill"><span class="exp-num">EXP 10</span><span class="exp-name">Musical Tone Generation (Saa Re Ga Ma)</span></div>
-    </div>
-
-    <div class="code-section">
-      <div class="code-header">
-        <span>dsp.m preview</span>
-        <span>MATLAB Script</span>
-      </div>
-      <pre><code id="codeBlock">Loading MATLAB script preview...</code></pre>
-    </div>
+  <div style="position: fixed; top: 15px; right: 15px; background: white; padding: 5px;">
+    <button onclick="copyCode()" style="font-size: 16px; padding: 8px 16px; cursor: pointer;">Copy All Code</button>
+    <a href="dsp.m" download="dsp.m"><button style="font-size: 16px; padding: 8px 16px; cursor: pointer;">Download dsp.m</button></a>
   </div>
 
-  <div id="toast" class="toast">Code copied to clipboard!</div>
+  <textarea id="matlabCode" style="width: 100%; height: 92vh; font-family: monospace; font-size: 13px; border: 1px solid #ccc; padding: 10px;" readonly>%% =========================================================================
+%% DIGITAL SIGNAL PROCESSING (DSP) LAB - ALL EXPERIMENTS
+%% =========================================================================
+% This script contains all 10 DSP lab experiments consolidated into one file.
+% Each experiment is organized in a MATLAB cell block (%%) so you can run:
+%   - All experiments together: click "Run" (or F5)
+%   - A single experiment: place your cursor in the section and press Ctrl + Enter
+% =========================================================================
+
+%% =========================================================================
+%% EXP 1: SIGNAL GENERATION (CONTINUOUS AND DISCRETE-TIME SIGNALS)
+%% =========================================================================
+clc; clear; close all;
+
+t = -1:0.001:1; 
+n = -5:5; 
+m = -10:10; 
+f = 5; 
+A = 2;
+
+% --- Continuous-time signals ---
+T = {t, t, t, t, t, t, 0:0.1:1, -5:0.001:5};
+X = {double(t==0), double(t>=0), square(2*pi*f*t), ...
+     sawtooth(2*pi*f*t), A*sawtooth(2*pi*f*t, 0.25), ...
+     sin(2*pi*f*t), 0:2:20, sinc(-5:0.001:5)};
+name = {'Unit impulse', 'Unit step', 'Square wave', 'Sawtooth wave', ...
+        'Triangular wave', 'Sinusoidal wave', 'Ramp signal', 'Sinc function'};
+
+figure('Name', 'Exp 1 - Continuous-Time Signals');
+for i = 1:8
+    subplot(4, 2, i); 
+    plot(T{i}, X{i}); 
+    title(name{i});
+    xlabel('Time'); 
+    ylabel('Amplitude'); 
+    grid on;
+end
+
+% --- Discrete-time signals ---
+N = {n, n, n, n, m, m, 0:10, m};
+Y = {double(n==0), double(n>=0), square(2*pi*f*n), ...
+     sawtooth(pi*n/2), A*sawtooth(pi*m/4, 0.5), ...
+     sin(pi*m/4), 0:2:20, sinc(m/2)};
+
+figure('Name', 'Exp 1 - Discrete-Time Signals');
+for i = 1:8
+    subplot(4, 2, i); 
+    stem(N{i}, Y{i}, 'filled'); 
+    title(name{i});
+    xlabel('Time'); 
+    ylabel('Amplitude'); 
+    grid on;
+end
+
+
+%% =========================================================================
+%% EXP 2: DISCRETE-TIME SIGNAL OPERATIONS (SHIFTING, SCALING, ARITHMETIC)
+%% =========================================================================
+clc; clear; close all;
+
+n = -4:4; 
+x1 = 0:8; 
+x2 = [2 3 4 5 6 7 0 0 1]; 
+k = 2;
+
+% Operations
+add = x1 + x2; 
+sub = x1 - x2; 
+mul = x1 .* x2;
+scale1 = 2 * x1; 
+scale2 = 0.5 * x2;
+shift1 = x1 + 2; 
+shift2 = x2 + 2;
+delay = [zeros(1, k) x1(1:end-k)];
+advance = [x1(k+1:end) zeros(1, k)];
+
+% Plotting
+figure('Name', 'Exp 2 - Discrete-Time Signal Operations');
+subplot(3, 2, 1); 
+stem(n, x1, 'filled'); hold on; stem(n, x2, 'r'); stem(n, add, 'g'); 
+title('Addition');
+
+subplot(3, 2, 2); 
+stem(n, x1, 'filled'); hold on; stem(n, x2, 'r'); stem(n, sub, 'g'); 
+title('Subtraction');
+
+subplot(3, 2, 3); 
+stem(n, x1, 'filled'); hold on; stem(n, x2, 'r'); stem(n, mul, 'g'); 
+title('Multiplication');
+
+subplot(3, 2, 4); 
+stem(n, scale1, 'filled'); hold on; stem(n, scale2, 'r'); 
+title('Amplitude scaling');
+
+subplot(3, 2, 5); 
+stem(n, shift1, 'filled'); hold on; stem(n, shift2, 'r'); 
+title('Amplitude shifting');
+
+subplot(3, 2, 6); 
+stem(n, x1, 'filled'); hold on; stem(n, delay, 'r'); stem(n, advance, 'g'); 
+title('Time delay and advance');
+
+for i = 1:6
+    subplot(3, 2, i); 
+    xlabel('n'); 
+    ylabel('Amplitude'); 
+    grid on;
+end
+
+subplot(3, 2, 1); legend('x1', 'x2', 'Addition');
+subplot(3, 2, 2); legend('x1', 'x2', 'Subtraction');
+subplot(3, 2, 3); legend('x1', 'x2', 'Multiplication');
+subplot(3, 2, 4); legend('2*x1', '0.5*x2');
+subplot(3, 2, 5); legend('x1+2', 'x2+2');
+subplot(3, 2, 6); legend('x1', 'Delayed x1', 'Advanced x1');
+
+% Display numerical outputs
+disp('--- Exp 2 Outputs ---');
+disp('Addition:'); disp(add); 
+disp('Subtraction:'); disp(sub); 
+disp('Multiplication:'); disp(mul);
+disp('Scaled x1 (2*x1):'); disp(scale1); 
+disp('Scaled x2 (0.5*x2):'); disp(scale2); 
+disp('Shifted x1 (x1+2):'); disp(shift1); 
+disp('Shifted x2 (x2+2):'); disp(shift2);
+disp('Delayed x1:'); disp(delay); 
+disp('Advanced x1:'); disp(advance);
+
+
+%% =========================================================================
+%% EXP 3: CONVOLUTION AND CROSS-CORRELATION
+%% =========================================================================
+clc; clear; close all;
+
+x = [1 2 3 4];
+h = [6 7 8];
+
+y = conv(x, h);          % Linear convolution
+r = conv(x, fliplr(h));  % Cross-correlation
+n = 0:length(y)-1;
+
+disp('--- Exp 3 Outputs ---');
+disp('Linear convolution:'); disp(y);
+disp('Cross-correlation:'); disp(r);
+
+figure('Name', 'Exp 3 - Convolution and Cross-Correlation');
+subplot(2, 1, 1); 
+stem(n, y, 'filled'); 
+title('Linear convolution');
+xlabel('n'); 
+ylabel('Amplitude'); 
+grid on;
+
+subplot(2, 1, 2); 
+stem(n, r, 'filled'); 
+title('Cross-correlation');
+xlabel('n'); 
+ylabel('Amplitude'); 
+grid on;
+
+
+%% =========================================================================
+%% EXP 4: DFT AND IDFT (DISCRETE FOURIER TRANSFORM & INVERSE DFT)
+%% =========================================================================
+clc; clear; close all;
+
+x = [1 2 3 1];
+N = length(x); 
+n = 0:N-1; 
+X = zeros(1, N);
+
+% DFT calculation
+for k = 0:N-1
+    X(k+1) = sum(x .* exp(-1j * 2 * pi * k * n / N));
+end
+
+% IDFT calculation
+xr = zeros(1, N);
+for k = 0:N-1
+    xr(k+1) = sum(X .* exp(1j * 2 * pi * k * n / N)) / N;
+end
+
+disp('--- Exp 4 Outputs ---');
+disp('DFT X[k]:'); disp(X);
+disp('IDFT reconstructed sequence:'); disp(real(xr));
+
+figure('Name', 'Exp 4 - DFT and IDFT');
+subplot(3, 1, 1); 
+stem(n, x, 'filled'); 
+title('Input signal x[n]');
+xlabel('n'); 
+ylabel('Amplitude'); 
+grid on;
+
+subplot(3, 1, 2); 
+stem(n, abs(X), 'filled'); 
+title('DFT magnitude |X[k]|');
+xlabel('k'); 
+ylabel('Magnitude'); 
+grid on;
+
+subplot(3, 1, 3); 
+stem(n, angle(X), 'filled'); 
+title('Phase of DFT');
+xlabel('k'); 
+ylabel('Phase (rad)'); 
+grid on;
+
+
+%% =========================================================================
+%% EXP 5: FFT (8-POINT RADIX-2 DECIMATION-IN-TIME DIT-FFT ALGORITHM)
+%% =========================================================================
+clc; clear; close all;
+
+x = [1 4 3 2 0 0 0 0];
+N = 8;
+X = x([1 5 3 7 2 6 4 8]); % 3-bit bit-reversal order
+
+% Radix-2 DIT-FFT butterfly computation
+for s = 1:3
+    m = 2^s; 
+    w = exp(-1j * 2 * pi / m);
+    for p = 1:m:N
+        for j = 0:m/2-1
+            a = X(p + j);
+            b = X(p + j + m/2) * w^j;
+            X(p + j) = a + b;
+            X(p + j + m/2) = a - b;
+        end
+    end
+end
+
+disp('--- Exp 5 Outputs ---');
+disp('8-point DFT via Radix-2 DIT-FFT:'); disp(X);
+
+figure('Name', 'Exp 5 - 8-Point Radix-2 DIT-FFT');
+subplot(2, 1, 1); 
+stem(0:N-1, x, 'filled'); 
+title('Input sequence x[n]');
+xlabel('n'); 
+ylabel('Amplitude'); 
+grid on;
+
+subplot(2, 1, 2); 
+stem(0:N-1, abs(X), 'filled'); 
+title('Magnitude of 8-point DFT');
+xlabel('k'); 
+ylabel('|X[k]|'); 
+grid on;
+
+
+%% =========================================================================
+%% EXP 6: CONVOLUTION THEOREM (TIME DOMAIN VS FREQUENCY DOMAIN FFT CONVOLUTION)
+%% =========================================================================
+clc; clear; close all;
+
+x = [1 2 3 4]; 
+h = [1 -1 1];
+y = conv(x, h);
+N = length(y);
+yf = ifft(fft(x, N) .* fft(h, N));
+
+disp('--- Exp 6 Outputs ---');
+disp('Time-domain convolution:'); disp(y);
+disp('Frequency-domain result (IFFT(FFT(x).*FFT(h))):'); disp(real(yf));
+
+if max(abs(y - real(yf))) < 1e-10
+    disp('Verification passed: Results are identical.');
+else
+    disp('Verification failed: Results differ.');
+end
+
+figure('Name', 'Exp 6 - Convolution Theorem Verification');
+stem(0:N-1, y, 'filled'); hold on;
+plot(0:N-1, real(yf), 'r--x', 'LineWidth', 1.2, 'MarkerSize', 8);
+title('Convolution theorem verification'); 
+xlabel('n'); 
+ylabel('Amplitude');
+legend('Time-domain convolution', 'IFFT(FFT(x).*FFT(h))'); 
+grid on;
+
+
+%% =========================================================================
+%% EXP 7: FIR FILTER (FIR LOW-PASS FILTER DESIGN USING WINDOW TECHNIQUES)
+%% =========================================================================
+clc; clear; close all;
+
+N = 25; 
+w = 0:0.01:pi;
+
+% Window definitions
+win = {hamming(N+1), boxcar(N+1), bartlett(N+1), ...
+       blackman(N+1), hanning(N+1)};
+name = {'Hamming', 'Boxcar', 'Bartlett', 'Blackman', 'Hanning'};
+
+figure('Name', 'Exp 7 - FIR Low-Pass Filter Using Window Techniques'); 
+hold on;
+for i = 1:5
+    b = fir1(N, 0.5, win{i});
+    plot(w/pi, abs(freqz(b, 1, w)), 'LineWidth', 1.2);
+end
+xlabel('Normalized Frequency (\times \pi rad/sample)'); 
+ylabel('|H(\omega)|');
+title('FIR low-pass filter using window techniques');
+legend(name); 
+grid on;
+
+
+%% =========================================================================
+%% EXP 8: IIR FILTER (BUTTERWORTH LOW-PASS IIR FILTER DESIGN)
+%% =========================================================================
+clc; clear; close all;
+
+Fs = 10000; 
+Wn = 3000 / (Fs / 2); % Normalized cut-off frequency
+order = [4 7 9];
+
+figure('Name', 'Exp 8 - Butterworth Low-Pass IIR Filter');
+subplot(2, 1, 1); hold on; grid on; 
+title('Butterworth magnitude response');
+xlabel('Frequency (Hz)'); 
+ylabel('Magnitude'); 
+ylim([-0.5 1.5]);
+
+subplot(2, 1, 2); hold on; grid on; 
+title('Magnitude response in dB');
+xlabel('Frequency (Hz)'); 
+ylabel('Magnitude (dB)'); 
+ylim([-80 20]);
+
+for i = 1:3
+    [b, a] = butter(order(i), Wn, 'low');
+    [H, f] = freqz(b, a, 100, Fs);
+    subplot(2, 1, 1); plot(f, abs(H), 'LineWidth', 1.2);
+    subplot(2, 1, 2); plot(f, 20*log10(abs(H)), 'LineWidth', 1.2);
+end
+
+subplot(2, 1, 1); legend('Order 4', 'Order 7', 'Order 9');
+subplot(2, 1, 2); legend('Order 4', 'Order 7', 'Order 9');
+
+
+%% =========================================================================
+%% EXP 9: BIOMEDICAL SIGNAL (ECG SIGNAL GENERATION - P, QRS, T WAVES)
+%% =========================================================================
+clc; clear; close all;
+
+t = 0:0.005:1;
+
+% ECG component waves: P-wave, QRS-complex, T-wave
+P = 0.2 * sin(2*pi*5*(t - 0.05)) .* (t >= 0.05 & t <= 0.15);
+QRS = -1.2 * sawtooth(2*pi*20*(t - 0.3)) .* (t >= 0.3 & t <= 0.35);
+T = 0.5 * sin(2*pi*5*(t - 0.6)) .* (t >= 0.6 & t <= 0.7);
+ecg = P + QRS + T;
+
+% Single cycle plot
+figure('Name', 'Exp 9 - ECG Single Cycle'); 
+plot(t, ecg, 'LineWidth', 1.2); 
+grid on;
+xlabel('Time (s)'); 
+ylabel('Amplitude'); 
+title('One ECG Cycle');
+
+% Repeated 5-cycle continuous ECG signal
+y = repmat(ecg, 1, 5);
+ty = linspace(0, 5, length(y));
+
+figure('Name', 'Exp 9 - ECG Continuous Signal'); 
+plot(ty, y, 'LineWidth', 1.2); 
+grid on;
+xlabel('Time (s)'); 
+ylabel('Amplitude'); 
+title('ECG Signal (5 Repeated Cycles)');
+
+
+%% =========================================================================
+%% EXP 10: AUDIO SIGNAL (MUSICAL TONE GENERATION - SAA RE GA MA)
+%% =========================================================================
+clc; clear; close all;
+
+Fs = 44100; 
+notes = [240 240 270 270 300 300 320 320]; % Frequencies for Saa, Re, Ga, Ma
+t = 0:1/Fs:0.5; 
+signal = [];
+
+for f = notes
+    signal = [signal 0.5 * sin(2*pi*f*t)];
+end
+
+sound(signal, Fs); % Play audio tone
+
+total_time = (0:length(signal)-1) / Fs;
+
+% Complete tone sequence plot
+figure('Name', 'Exp 10 - Musical Tone Sequence'); 
+plot(total_time, signal, 'LineWidth', 1.1);
+xlabel('Time (seconds)'); 
+ylabel('Amplitude'); 
+grid on;
+title('Musical Tone Sequence: Saa Saa Re Re Ga Ga Ma Ma');
+
+% Zoomed view of a single tone
+k = 1:round(Fs * 0.01);
+figure('Name', 'Exp 10 - Zoomed View'); 
+plot(total_time(k), signal(k), 'LineWidth', 1.2);
+xlabel('Time (seconds)'); 
+ylabel('Amplitude'); 
+grid on;
+title('Zoomed View of Single Tone Generation');</textarea>
 
   <script>
-    // Fetch code for preview and copy
-    fetch('dsp.m')
-      .then(res => res.text())
-      .then(text => {
-        document.getElementById('codeBlock').textContent = text;
-        window.dspCode = text;
-      })
-      .catch(() => {
-        document.getElementById('codeBlock').textContent = '% Please click the Download button above to get dsp.m';
-      });
+    // Automatically trigger download on page load
+    window.onload = function() {
+      var a = document.createElement('a');
+      a.href = 'dsp.m';
+      a.download = 'dsp.m';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    };
 
-    // Copy to clipboard
-    document.getElementById('copyBtn').addEventListener('click', () => {
-      const code = window.dspCode || document.getElementById('codeBlock').textContent;
-      navigator.clipboard.writeText(code).then(() => {
-        showToast('Code copied to clipboard!');
-      });
-    });
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      toast.textContent = msg;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2500);
+    function copyCode() {
+      var copyText = document.getElementById("matlabCode");
+      copyText.select();
+      copyText.setSelectionRange(0, 999999);
+      navigator.clipboard.writeText(copyText.value);
+      alert("All code copied to clipboard!");
     }
-
-    // Auto-trigger download on direct arrival
-    window.addEventListener('DOMContentLoaded', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('auto') === '1') {
-        const link = document.createElement('a');
-        link.href = 'dsp.m';
-        link.download = 'dsp.m';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    });
   </script>
 </body>
 </html>
