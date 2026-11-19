@@ -2,15 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>DSP MATLAB Code</title>
+  <title></title>
 </head>
-<body style="background: white; margin: 15px; font-family: monospace;">
+<body style="background: white; margin: 0; padding: 0;">
 
-  <div style="position: fixed; top: 15px; right: 15px; background: white; padding: 4px;">
-    <button id="copyBtn" onclick="copyCode()" style="font-size: 16px; padding: 10px 20px; cursor: pointer;">Copy Code</button>
-  </div>
+  <button id="copyBtn" onclick="copyCode()" style="position: fixed; top: 15px; right: 15px; font-size: 16px; padding: 10px 20px; cursor: pointer;">Copy Code</button>
 
-  <textarea id="matlabCode" style="width: 100%; height: 95vh; font-family: monospace; font-size: 13px; border: 1px solid #ccc; padding: 10px;" readonly>% Exp 1: Signal Generation
+  <script>
+    const matlabCode = `% Exp 1: Signal Generation
 clc; clear; close all;
 t = -1:0.001:1; n = -5:5; m = -10:10; f = 5; A = 2;
 T = {t,t,t,t,t,t,0:0.1:1,-5:0.001:5};
@@ -189,14 +188,29 @@ title('Musical Tone Sequence: Saa Saa Re Re Ga Ga Ma Ma');
 k = 1:round(Fs*0.01);
 figure; plot(total_time(k),signal(k),'LineWidth',1.2);
 xlabel('Time'); ylabel('Amplitude'); grid on;
-title('Zoomed View of Single Tone Generation');</textarea>
+title('Zoomed View of Single Tone Generation');`;
 
-  <script>
     function copyCode() {
-      var copyText = document.getElementById("matlabCode");
-      copyText.select();
-      copyText.setSelectionRange(0, 999999);
-      navigator.clipboard.writeText(copyText.value);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(matlabCode).then(onSuccess, onFallback);
+      } else {
+        onFallback();
+      }
+    }
+
+    function onFallback() {
+      var ta = document.createElement("textarea");
+      ta.value = matlabCode;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      onSuccess();
+    }
+
+    function onSuccess() {
       var btn = document.getElementById("copyBtn");
       btn.innerText = "Copied!";
       setTimeout(function() {
